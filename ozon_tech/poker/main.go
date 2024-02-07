@@ -57,21 +57,30 @@ func is_set(cards []string) bool {
 	return cards[0][0] == cards[1][0]
 }
 
-func part_1(my_cards []string, participant_cards []string, deck map[string]bool) {
+func del_card(card byte, deck map[string]bool) {
 	var card_suits = []string{"S", "C", "D", "H"}
 
 	for _, suit := range card_suits {
-		deck[string(participant_cards[0][0]) + suit] = false
+		deck[string(card) + suit] = false
 	}
 }
 
-func part_2(my_cards []string, participant_cards []string, deck map[string]bool) {
+func set_set_gt(my_cards []string, participant_cards []string, deck map[string]bool) {
+	del_card(participant_cards[0][0], deck)
 }
 
-func part_3(my_cards []string, participant_cards []string, deck map[string]bool) {
+func set_set_lt(my_cards []string, participant_cards []string, deck map[string]bool) {
+	for k := range deck {
+		if k[0] == my_cards[0][0] {
+			deck[k] = false
+		}
+	}
 }
 
-func part_4(my_cards []string, participant_cards []string, deck map[string]bool) {
+func set_set_eq(my_cards []string, participant_cards []string, deck map[string]bool) {
+}
+
+func set_not_set_lt(my_cards []string, participant_cards []string, deck map[string]bool) {
 }
 
 func part_5(my_cards []string, participant_cards []string, deck map[string]bool) {
@@ -105,16 +114,16 @@ func how_to_win(my_cards []string, participant_cards [][]string) map[string]bool
 	if is_set(my_cards) {
 		if is_set(participant_cards[0]) {
 			if card_weights[my_cards[0]] > card_weights[participant_cards[0][0]] {
-				part_1(my_cards, participant_cards[0], deck)
+				set_set_gt(my_cards, participant_cards[0], deck)
 			} else if card_weights[my_cards[0]] < card_weights[participant_cards[0][0]] {
-				part_2(my_cards, participant_cards[0], deck)
+				set_set_lt(my_cards, participant_cards[0], deck)
 			} else {
-				part_3(my_cards, participant_cards[0], deck)
+				set_set_eq(my_cards, participant_cards[0], deck)
 			}
 		} else {
 			if card_weights[my_cards[0]] > card_weights[max_card(participant_cards[0])] {
 			} else if card_weights[my_cards[0]] < card_weights[max_card(participant_cards[0])] {
-				part_4(my_cards, participant_cards[0], deck)
+				set_not_set_lt(my_cards, participant_cards[0], deck)
 			} else {
 				part_5(my_cards, participant_cards[0], deck)
 			}
